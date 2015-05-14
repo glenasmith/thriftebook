@@ -45,6 +45,8 @@ function storeDealInCouchIfRequired(deal, next) {
         if (!foundIt) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
             db.insert(deal, next(deal));
+        } else {
+            next(deal); // don't need to insert it, but pass it on for next in chain..
         }
 
     });
@@ -80,11 +82,12 @@ feedsToParse.forEach(function(element) {
 });
 
 var secondsWaitingSoFar = 0;
-var MAX_FEED_FETCH_TIMEOUT_SECONDS = 10;
+var MAX_FEED_FETCH_TIMEOUT_SECONDS = process.env.feedFetchTimeoutSecs || 15;
 
 function waitForFeedParsersToFinish () {
     secondsWaitingSoFar += 1;
     if (secondsWaitingSoFar < MAX_FEED_FETCH_TIMEOUT_SECONDS) {
+        console.log("After " + secondsWaitingSoFar + " seconds, we have parsed " + feedsParsed + " feeds");
         if (feedsParsed < feedsToParse.length) setTimeout(waitForFeedParsersToFinish, 1 * 1000);
     } else {
         console.log("Aborting FeedFetch after timeout of " + MAX_FEED_FETCH_TIMEOUT_SECONDS + " seconds.");
