@@ -1,0 +1,27 @@
+{
+  "name": "Thriftebook-Redux",
+  "version": "0.0.1",
+  "description": "An aggregator for deals of the day",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.12.0",
+    "express": "^4.11.2",
+    "gulp": "^3.8.11",
+    "gulp-mocha": "^2.0.0",
+    "gulp-nodemon": "^1.0.5",
+    "moment": "^2.10.3",
+    "nano": "^6.1.2",
+    "xml2js": "^0.4.8"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "sinon": "^1.14.0",
+    "gulp-env": "^0.2.0",
+    "supertest": "^0.15.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Glen Smith <glen@bytecode.com.au>",
+  "license": "Apache2"
+}
