@@ -29,6 +29,7 @@ function storeDealInCouchIfRequired(deal, next) {
     var yesterday = now.subtract(1, "day").unix();
 
     deal.date = today;
+    deal.createdAt = now;
 
     db.view('deals', 'by_date', {startKey: yesterday, endKey: today, descending: true}, function(err, body) {
         var foundIt = false;
