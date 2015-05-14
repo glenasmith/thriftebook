@@ -1,9 +1,9 @@
 var express = require('express');
 
-var routes = function(Book){
+var routes = function(db){
     var dealRouter = express.Router();
 
-    var dealController = require('../controllers/dealController')(Book)
+    var dealController = require('../controllers/dealController')(db)
     dealRouter.route('/')
         .get(dealController.getAllDeals);
 

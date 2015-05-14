@@ -14,7 +14,7 @@ var port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-dealsRouter = require('./routes/dealRoutes')(Book);
+dealsRouter = require('./routes/dealRoutes')(db);
 
 
 app.use('/api/deals', dealsRouter);
