@@ -12,7 +12,7 @@ module.exports = {
 
             var allContent = result.feed.entry[0].content[0]._;
 
-            var coverRegexp = /.*?img src='(.*?)'/;
+            var coverRegexp = /.*?img src=['"](.*?)['"]/;
 
             var imageMatches = allContent.replace(/(\r\n|\n|\r)/gm, "").match(coverRegexp);
 

@@ -1,10 +1,10 @@
 var request = require("request"),
-    nano = require('nano'),
+    MongoClient = require('mongodb').MongoClient,
     moment = require('moment');
 
 console.log('Starting up Feed Fetcher for Thriftebook...');
 
-db = nano(process.env.couchDbUrl || 'http://localhost:5984/thriftebook');
+var dbUrl = process.env.mongoDbUrl || 'mongodb://localhost:27017/thriftebook';
 
 function parseDeal(vendor, next) {
 
@@ -21,7 +21,7 @@ function parseDeal(vendor, next) {
     })
 }
 
-function storeDealInCouchIfRequired(deal, next) {
+function storeDealInDbIfRequired(deal, db, next) {
 
     var now = moment();
 
@@ -29,28 +29,26 @@ function storeDealInCouchIfRequired(deal, next) {
     var yesterday = now.subtract(1, "day").unix();
 
     deal.date = today;
-    deal.createdAt = now;
+    deal.createdAt = now.unix();
+    
+    var dealsCollection = db.collection('deals');
 
-    db.view('deals', 'by_date', {startKey: yesterday, endKey: today, descending: true}, function(err, body) {
-        var foundIt = false;
-        if (body) {
-            body.rows.forEach(function(row) {
-                var dbDeal = row.value;
-                if (dbDeal.vendor == deal.vendor) {
-                    if (dbDeal.title == deal.title) {
-                        foundIt = true;
-                        console.log(deal.title + " from " + deal.vendor + " is already in the Db, skipping..");
-                    }
-                }
-            });
-        }
-        if (!foundIt) {
+    dealsCollection.find({ vendor: deal.vendor, title: deal.title, date: { $in: [yesterday, today] } }).toArray(function(err, existingDeals) {
+
+        if (!existingDeals.length) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
-            db.insert(deal, next(deal));
+            
+            // Insert some documents
+            dealsCollection.insert([
+                deal
+            ], function (err, insertedDeal) {
+                next(insertedDeal);
+            });
+            
         } else {
             next(deal); // don't need to insert it, but pass it on for next in chain..
         }
-
+        
     });
 
 }
@@ -65,23 +63,31 @@ var feedsToParse = [ manning, oreilly, apress, informit];
 
 var feedsParsed = 0;
 
-feedsToParse.forEach(function(element) {
-    try {
-        console.log("Parsing feed: " + element.url);
-        parseDeal(element, function(deal) {
+MongoClient.connect(dbUrl, function (err, db) {
 
-            console.log("Done parsing feed: " + element.url);
+    console.log("Connected correctly to MongoDb server at: " + dbUrl);
 
-            storeDealInCouchIfRequired(deal, function(processedDeal) {
-                feedsParsed += 1;
-            })
-        });
-    }
-    catch(err) {
-        console.log("Error parsing feed for: " + element.vendor + " at URL: " + element.url + " :" + err);
-        feedsParsed += 1;
-    }
+    feedsToParse.forEach(function(element) {
+        try {
+            console.log("Parsing feed: " + element.url);
+            parseDeal(element, function(deal) {
+
+                console.log("Done parsing feed: " + element.url);
+
+                storeDealInDbIfRequired(deal, db, function (processedDeal) {
+                    console.log("Deal id is " + processedDeal._id);
+                    feedsParsed += 1;
+                });
+            });
+        } catch (err) {
+            console.log("Error parsing feed for: " + element.vendor + " at URL: " + element.url + " :" + err);
+            feedsParsed += 1;
+        }
+    });
+    
 });
+
+
 
 var secondsWaitingSoFar = 0;
 var MAX_FEED_FETCH_TIMEOUT_SECONDS = process.env.feedFetchTimeoutSecs || 15;
