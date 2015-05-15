@@ -13,10 +13,10 @@ var routes = function(db){
     dealRouter.route('/date/:startDate')
         .get(dealController.getDealsForDate)
 
-    dealRouter.route('/date/vendor/:vendorName')
+    dealRouter.route('/vendor/:vendorName')
         .get(dealController.getDealsForVendor)
 
-    dealRouter.route('/date/vendor/:vendorName/:startDate')
+    dealRouter.route('/vendor/:vendorName/:startDate')
         .get(dealController.getDealsForVendorOnDate)
 
     return dealRouter;

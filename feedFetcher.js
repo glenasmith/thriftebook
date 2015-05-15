@@ -33,15 +33,17 @@ function storeDealInCouchIfRequired(deal, next) {
 
     db.view('deals', 'by_date', {startKey: yesterday, endKey: today, descending: true}, function(err, body) {
         var foundIt = false;
-        body.rows.forEach(function(row) {
-            var dbDeal = row.value;
-            if (dbDeal.vendor == deal.vendor) {
-                if (dbDeal.title == deal.title) {
-                    foundIt = true;
-                    console.log(deal.title + " from " + deal.vendor + " is already in the Db, skipping..");
+        if (body) {
+            body.rows.forEach(function(row) {
+                var dbDeal = row.value;
+                if (dbDeal.vendor == deal.vendor) {
+                    if (dbDeal.title == deal.title) {
+                        foundIt = true;
+                        console.log(deal.title + " from " + deal.vendor + " is already in the Db, skipping..");
+                    }
                 }
-            }
-        })
+            });
+        }
         if (!foundIt) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
             db.insert(deal, next(deal));

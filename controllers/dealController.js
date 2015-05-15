@@ -40,7 +40,31 @@ var dealController = function(db) {
 
     };
 
-    var getDealsForVendor = function(req,res) {
+    var getDealsForVendor = function (req, res) {
+
+        console.log("Vendor is: " + req.params.vendorName);
+        db.view('deals', 'by_vendor', { key: req.params.vendorName, descending: true }, function (err, body) {
+            
+            if (err) {
+                res.status(500).send(err);
+            }
+            
+            if (!body) {
+                res.status(404)
+            }
+            
+            var recentDeals = _.map(body.rows, function (row) {
+                return row.value;
+            });
+            if (recentDeals.length) {
+                res.status(200).json(recentDeals);
+            } else {
+                res.status(404);
+            }
+
+
+        });
+       
 
     };
 
