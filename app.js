@@ -1,24 +1,30 @@
 var express = require('express'),
-    nano = require('nano'),
+    MongoClient = require('mongodb').MongoClient,
     bodyParser = require('body-parser');
 
 var db;
 console.log('Starting up Thriftebook...');
 
-db = nano(process.env.couchDbUrl || 'http://localhost:5984/thriftebook');
+var dbUrl = process.env.mongoDbUrl || 'mongodb://localhost:27017/thriftebook';
 
 var app = express();
 
 var port = process.env.PORT || 3000;
 
+var dealsRouter;
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-dealsRouter = require('./routes/dealRoutes')(db);
+MongoClient.connect(dbUrl, function(err, db) {
 
+    console.log("Connected correctly to MongoDb server at: " + dbUrl);
 
-app.use('/api/deals', dealsRouter);
+    dealsRouter = require('./routes/dealRoutes')(db);
 
+    app.use('/api/deals', dealsRouter);
+
+});
 
 app.get('/', function(req, res){
     res.send('Welcome to the Thriftebook API');

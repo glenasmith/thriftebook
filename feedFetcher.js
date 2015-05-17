@@ -106,4 +106,3 @@ waitForFeedParsersToFinish();
 
 console.log('Finished Feed Fetcher for Thriftebook...');
 
-
