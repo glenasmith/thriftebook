@@ -65,6 +65,8 @@ var feedsParsed = 0;
 
 MongoClient.connect(dbUrl, function (err, db) {
 
+    mongoDb = db; // so we can close later..
+
     console.log("Connected correctly to MongoDb server at: " + dbUrl);
 
     feedsToParse.forEach(function(element) {
@@ -75,7 +77,7 @@ MongoClient.connect(dbUrl, function (err, db) {
                 console.log("Done parsing feed: " + element.url);
 
                 storeDealInDbIfRequired(deal, db, function (processedDeal) {
-                    console.log("Deal id is " + processedDeal._id);
+                    console.log("Processed Deal: " + processedDeal.title);
                     feedsParsed += 1;
                 });
             });
@@ -84,6 +86,8 @@ MongoClient.connect(dbUrl, function (err, db) {
             feedsParsed += 1;
         }
     });
+
+    console.log("Feed iterator finished");
     
 });
 
@@ -96,13 +100,17 @@ function waitForFeedParsersToFinish () {
     secondsWaitingSoFar += 1;
     if (secondsWaitingSoFar < MAX_FEED_FETCH_TIMEOUT_SECONDS) {
         console.log("After " + secondsWaitingSoFar + " seconds, we have parsed " + feedsParsed + " feeds");
-        if (feedsParsed < feedsToParse.length) setTimeout(waitForFeedParsersToFinish, 1 * 1000);
+        if (feedsParsed < feedsToParse.length) {
+            setTimeout(waitForFeedParsersToFinish, 1 * 1000);
+        } else {
+            mongoDb.close();
+        }
     } else {
         console.log("Aborting FeedFetch after timeout of " + MAX_FEED_FETCH_TIMEOUT_SECONDS + " seconds.");
+        mongoDb.close();
     }
 };
 
 waitForFeedParsersToFinish();
 
-console.log('Finished Feed Fetcher for Thriftebook...');
 

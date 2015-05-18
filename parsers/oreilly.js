@@ -18,6 +18,18 @@ module.exports = {
 
             var tidyTitle = result.feed.entry[0].title[0].replace(/(\r\n|\n|\r)/gm, "");
 
+            // Title will now look like:  #Ebook Deal/Day: Learning MySQL and MariaDB - $21.49 (Save 50%) Use code DEAL 
+            // Let's see if we can post process back to the real title.
+            
+            var titlePostProcessor = /.*?:\s(.*?)\s*?-\s*?\$.*/;
+
+            var advancedTitleMatcher = tidyTitle.match(titlePostProcessor);
+
+            if (advancedTitleMatcher) {
+                tidyTitle = advancedTitleMatcher[1];
+            }
+
+
             next({
                 vendor: "O'Reilly", // hacky because of compromised this..
                 link: result.feed.entry[0]['feedburner:origLink'][0],
