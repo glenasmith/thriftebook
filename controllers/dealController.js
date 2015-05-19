@@ -34,7 +34,7 @@ var dealController = function(db) {
         
         var dealsCollection = db.collection('deals');
         
-        dealsCollection.find({ vendor: deal.vendor, title: deal.title, date: { $in: [yesterday, today] } }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ date: { $in: [yesterday, today] } }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
