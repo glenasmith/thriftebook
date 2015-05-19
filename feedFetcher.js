@@ -39,7 +39,7 @@ function storeDealInDbIfRequired(deal, db, next) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
             
             // Insert some documents
-            dealsCollection.insert([
+            dealsCollection.insertOne([
                 deal
             ], function (err, insertedDeal) {
                 next(insertedDeal);
