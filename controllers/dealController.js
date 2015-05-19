@@ -8,7 +8,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
         
-        dealsCollection.find({}).toArray(function (err, allDeals) {
+        dealsCollection.find({}).sort({ createdAt: -1 }).toArray(function (err, allDeals) {
             
             if (err) {
                 res.status(500).send(err);
@@ -34,7 +34,7 @@ var dealController = function(db) {
         
         var dealsCollection = db.collection('deals');
         
-        dealsCollection.find({ date: { $in: [yesterday, today] } }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ date: { $in: [yesterday, today] } }).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -64,7 +64,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ).sort({ vendor: 1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -127,7 +127,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
             
             if (err) {
                 res.status(500).send(err);
