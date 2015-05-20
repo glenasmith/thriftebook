@@ -1,0 +1,26 @@
+{
+  "name": "thriftebook-redux",
+  "version": "0.0.1",
+  "authors": [
+    "Glen Smith <glen@bytecode.com.au>"
+  ],
+  "license": "Apache",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.6",
+    "satellizer": "~0.8.7",
+    "angular-bootstrap": "~0.12.0",
+    "angular-ui-router": "~0.2.13",
+    "angular-toastr": "~0.5.2",
+    "angular-animate": "~1.3.6"
+  },
+  "resolutions": {
+    "angular": "1.3.6"
+  }
+}

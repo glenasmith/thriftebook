@@ -1,0 +1,17 @@
+<div class="well">
+    <div class="col-sm-8 col-md-6 col-md-offset-3 col-sm-offset-2">
+        <div class="row row-striped" ng-repeat="deal in deals">
+            <a href="{{ deal.link }}">
+                <div class="col-xs-8">
+                    <img src="{{deal.image}}" class="deal-image">
+                </div>
+                <div class="col-xs-8">
+                    {{deal.vendor | limitTo : 75 }}
+                </div>
+                <div class="col-xs-8">
+                    {{deal.title | limitTo : 75 }}
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

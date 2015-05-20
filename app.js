@@ -15,6 +15,7 @@ var dealsRouter;
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(express.static('./temp'));
 
 MongoClient.connect(dbUrl, function(err, db) {
 
