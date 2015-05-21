@@ -11,12 +11,14 @@ module.exports = {
 
             var matches = body.match(manningRegexp);
 
+            var detail = matches[4].replace(/<[^>]+/, " ").trim();
+
             next( {
                 vendor: this.vendor,
                 link: matches[1],
                 title: matches[2],
                 image: matches[3],
-                text: matches[4]
+                text: detail
             });
 
     }
