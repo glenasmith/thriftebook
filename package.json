@@ -20,6 +20,7 @@
     "gulp-env": "^0.2.0",
     "gulp-inject": "^1.2.0",
     "gulp-mocha": "^2.0.0",
+    "gulp-zip": "^3.0.2",
     "main-bower-files": "^2.8.0",
     "sinon": "^1.14.0",
     "supertest": "^0.15.0"

@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     mainBowerFiles = require('main-bower-files'),
     inject = require('gulp-inject'),
     del = require('del'),
-    supertest = require('supertest');
+    zip = require('gulp-zip');
 
 
 var paths = {
@@ -43,21 +43,18 @@ gulp.task('clean', function () {
 });
 
 
+gulp.task('webjob', function() {
 
+    var webjob = "feedFetcher.zip";
 
-//gulp.task('default', function(){
-//    nodemon({
-//        script: 'app.js',
-//        ext: 'js',
-//        env: {
-//            PORT:8000
-//        },
-//        ignore: ['./node_modules/**']
-//    })
-//    .on('restart', function(){
-//        console.log('Restarting');
-//    });
-//});
+    del(webjob)
+
+    return gulp.src('parsers/*.js')
+        .pipe(gulp.src("package.json"))
+        .pipe(gulp.src("feedFetcher.js"))
+        .pipe(zip(webjob))
+        .pipe(gulp.dest('.'));
+});
 
 gulp.task('test', function(){
     env({vars: {ENV:'Test'}});
