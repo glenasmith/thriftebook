@@ -11,7 +11,7 @@ module.exports = {
 
             var matches = body.match(manningRegexp);
 
-            var detail = matches[4].replace(/<[^>]+/, " ").trim();
+            var detail = matches[4].replace(/<[^>]+/, " ").trim(); // strip all html
 
             next( {
                 vendor: this.vendor,

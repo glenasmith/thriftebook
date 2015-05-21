@@ -29,13 +29,15 @@ module.exports = {
                 tidyTitle = advancedTitleMatcher[1];
             }
 
+            var detail = allContent.replace(/<[^>]+/, " ").trim(); // strip all html
+
 
             next({
                 vendor: "O'Reilly", // hacky because of compromised this..
                 link: result.feed.entry[0]['feedburner:origLink'][0],
                 title: tidyTitle,
                 image: imageMatches[1],
-                text: allContent
+                text: detail
             });
 
         })
