@@ -6,13 +6,15 @@
                     <th>Cover</th>
                     <th>Title</th>
                     <th>Vendor</th>
+                    <th>Deal Info</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="deal in deals">
                     <td class="col-cover"><img src="{{deal.image}}" class="deal-image"></td>
                     <td class="col-title"><a href="{{ deal.link }}">{{deal.title | limitTo : 75 }}</a></td>
-                    <td class="col-vendor">{{deal.vendor | limitTo : 75 }}</td>
+                    <td class="col-vendor">{{deal.vendor}}</td>
+                    <td class="col-text">{{deal.text | limitTo : 150 }}</td>
                 </tr>
             </tbody>
 
