@@ -27,7 +27,7 @@
     <Compile Include="parsers\manning.js" />
     <Compile Include="parsers\oreilly.js" />
     <Compile Include="routes\dealRoutes.js" />
-    <Compile Include="tests\bookControllerTests.js" />
+    <Compile Include="tests\basicParserTests.js" />
     <Compile Include="tests\bookIntegrationTests.js" />
   </ItemGroup>
   <ItemGroup>

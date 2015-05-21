@@ -1,0 +1,1 @@
+document.write("<b><b>May 21, 2015<br><br><a href='http://www.manning.com/maras/'>Secrets of the JavaScript Ninja, Second Edition</a><br><br><a href='http://www.manning.com/maras/'><img src='http://www.manning.com/maras/maras_cover150.jpg'></a><br><br>Get half off the MEAP eBook or MEAP pBook<br><br>Enter dotd052115 in the Promotional Code box when you check out.<b>")

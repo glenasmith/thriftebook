@@ -29,7 +29,7 @@ module.exports = {
                 tidyTitle = advancedTitleMatcher[1];
             }
 
-            var detail = allContent.replace(/<[^>]+/, " ").trim(); // strip all html
+            var detail = allContent.replace(/<[^>]+>/g, " ").trim(); // strip all html
 
 
             next({
