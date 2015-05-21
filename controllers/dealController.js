@@ -25,6 +25,19 @@ var dealController = function(db) {
 
     };
 
+    function getDealsFromTheLast24Hours(recentDeals) {
+
+        return _.filter(recentDeals, function(deal) {
+
+            var created = deal.createdAt;
+            var thisTimeYesterday = moment().subtract(24, 'hours').unix();
+            return  created > thisTimeYesterday;
+
+        });
+
+
+    }
+
     var getTodaysDeals = function(req,res) {
 
         var now = moment();
@@ -41,6 +54,7 @@ var dealController = function(db) {
             }
 
             if (recentDeals.length) {
+                // var currentDeals = getDealsFromTheLast24Hours(recentDeals);
                 res.status(200).json(recentDeals);
             } else {
                 res.status(404);

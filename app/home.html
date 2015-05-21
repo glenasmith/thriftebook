@@ -11,10 +11,10 @@
             </thead>
             <tbody>
                 <tr ng-repeat="deal in deals">
-                    <td class="col-cover"><img src="{{deal.image}}" class="deal-image"></td>
-                    <td class="col-title"><a href="{{ deal.link }}">{{deal.title | limitTo : 75 }}</a></td>
-                    <td class="col-vendor">{{deal.vendor}}</td>
-                    <td class="col-text">{{deal.text | limitTo : 150 }}</td>
+                    <td><img src="{{deal.image}}" class="deal-image"></td>
+                    <td><a href="{{ deal.link }}">{{deal.title | limitTo : 75 }}</a></td>
+                    <td>{{deal.vendor}}</td>
+                    <td>{{deal.text | limitTo : 150 }}</td>
                 </tr>
             </tbody>
 
