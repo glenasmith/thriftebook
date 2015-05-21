@@ -3,3 +3,12 @@
     height: 159px;
     width: 120px;
 }
+
+.deals-table {
+    width: 100%;
+}
+
+td,th {
+    padding: 2em;
+}
+

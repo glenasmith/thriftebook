@@ -1,6 +1,6 @@
 <div class="well">
 
-        <table class="row row-striped">
+        <table class="row row-striped" class="deals-table">
             <thead>
                 <tr>
                     <th>Cover</th>
@@ -10,9 +10,9 @@
             </thead>
             <tbody>
                 <tr ng-repeat="deal in deals">
-                    <td><img src="{{deal.image}}" class="deal-image"></td>
-                    <td><a href="{{ deal.link }}">{{deal.title | limitTo : 75 }}</a></td>
-                    <td>{{deal.vendor | limitTo : 75 }}</td>
+                    <td class="col-cover"><img src="{{deal.image}}" class="deal-image"></td>
+                    <td class="col-title"><a href="{{ deal.link }}">{{deal.title | limitTo : 75 }}</a></td>
+                    <td class="col-vendor">{{deal.vendor | limitTo : 75 }}</td>
                 </tr>
             </tbody>
 
