@@ -1,14 +1,20 @@
 
 var _ = require('lodash'),
+    ObjectId = require('mongodb').ObjectID,
+    Binary = require('mongodb').Binary,
     moment = require('moment');
 
 var dealController = function(db) {
+
+
+    var basicFieldsToReturn = [ '_id', 'vendor', 'link', 'title', 'text', 'createdAt' ];
+
 
     var getAllDeals = function (req, res){
 
         var dealsCollection = db.collection('deals');
         
-        dealsCollection.find({}).sort({ createdAt: -1 }).toArray(function (err, allDeals) {
+        dealsCollection.find({}, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, allDeals) {
             
             if (err) {
                 res.status(500).send(err);
@@ -37,7 +43,7 @@ var dealController = function(db) {
 
         console.log("Looking for entries with createdAt greater than " + thisTimeYesterday + " against current time of " + moment().toDate());
         
-        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -67,7 +73,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).sort({ vendor: 1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ, basicFieldsToReturn).sort({ vendor: 1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -130,7 +136,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
             
             if (err) {
                 res.status(500).send(err);
@@ -147,14 +153,42 @@ var dealController = function(db) {
 
     };
 
-    
+    var getCoverImage = function (req, res) {
+
+        var dealsCollection = db.collection('deals');
+
+        var record = {"_id": new ObjectId(req.params.id)};
+        dealsCollection.findOne(record, function(err,result){
+            if(err)
+                res.status(500).send(err);
+            else {
+
+                try {
+                    var contentType = result.imageMimeType;
+                    var contentLength = result.imageContent.length;
+                    var contentBinary = result.imageContent.read(0, contentLength);
+
+                    res.status(200)
+                        .type(contentType)
+                        .set({'Content-Length': contentLength})
+                        .send(contentBinary);
+                } catch (e) {
+                    console.log(e);
+                    res.status(404).end();
+                }
+            }
+        });
+
+
+    };
 
 
     return {
         getAllDeals: getAllDeals,
         getTodaysDeals:getTodaysDeals,
         getDealsForDate:getDealsForDate,
-        getDealsForVendor:getDealsForVendor
+        getDealsForVendor:getDealsForVendor,
+        getCoverImage: getCoverImage
     }
 }
 

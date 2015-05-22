@@ -20,6 +20,9 @@ var routes = function(db){
     dealRouter.route('/vendor/:vendorName/:year?/:month?/:day?')
         .get(dealController.getDealsForVendor);
 
+    dealRouter.route('/image/:id')
+        .get(dealController.getCoverImage);
+
 
     return dealRouter;
 };
