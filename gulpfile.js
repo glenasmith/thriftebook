@@ -49,9 +49,7 @@ gulp.task('webjob', function() {
 
     del(webjob)
 
-    return gulp.src('parsers/*.js')
-        .pipe(gulp.src("package.json"))
-        .pipe(gulp.src("feedFetcher.js"))
+    return gulp.src(['parsers/*.js', 'package.json', 'feedFetcher.js'], {base: "."})
         .pipe(zip(webjob))
         .pipe(gulp.dest('.'));
 });
