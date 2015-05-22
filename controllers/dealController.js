@@ -6,11 +6,15 @@ var _ = require('lodash'),
 
 var dealController = function(db) {
 
+
+    var basicFieldsToReturn = [ '_id', 'vendor', 'link', 'title', 'text', 'createdAt' ];
+
+
     var getAllDeals = function (req, res){
 
         var dealsCollection = db.collection('deals');
         
-        dealsCollection.find({}).sort({ createdAt: -1 }).toArray(function (err, allDeals) {
+        dealsCollection.find({}, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, allDeals) {
             
             if (err) {
                 res.status(500).send(err);
@@ -39,7 +43,7 @@ var dealController = function(db) {
 
         console.log("Looking for entries with createdAt greater than " + thisTimeYesterday + " against current time of " + moment().toDate());
         
-        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -69,7 +73,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).sort({ vendor: 1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ, basicFieldsToReturn).sort({ vendor: 1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
@@ -132,7 +136,7 @@ var dealController = function(db) {
 
         var dealsCollection = db.collection('deals');
 
-        dealsCollection.find(mongoQ).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find(mongoQ, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
             
             if (err) {
                 res.status(500).send(err);
@@ -158,7 +162,20 @@ var dealController = function(db) {
             if(err)
                 res.status(500).send(err);
             else {
-                res.status(200).type(result.imageMimeType).send(result.imageContent.binary);
+
+                try {
+                    var contentType = result.imageMimeType;
+                    var contentLength = result.imageContent.length;
+                    var contentBinary = result.imageContent.read(0, contentLength);
+
+                    res.status(200)
+                        .type(contentType)
+                        .set({'Content-Length': contentLength})
+                        .send(contentBinary);
+                } catch (e) {
+                    console.log(e);
+                    res.status(404).end();
+                }
             }
         });
 

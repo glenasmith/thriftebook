@@ -29,14 +29,14 @@ function populateImageInfo(deal, next) {
 
         console.log("Fetching image: " + deal.image);
 
-        request(deal.image, function (error, response, body) {
+        request.get({url: deal.image, encoding: null}, function (error, response, body) {
 
             if (error || response.statusCode != 200) {
                 console.log(error);
                 next(deal);
             }
 
-            deal.imageContent = new Binary(response.body);
+            deal.imageContent = new Binary(body);
             deal.imageMimeType = response.headers['content-type'];
             next(deal);
 
