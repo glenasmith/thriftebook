@@ -1,5 +1,6 @@
 var request = require("request"),
     MongoClient = require('mongodb').MongoClient,
+    Binary = require('mongodb').Binary,
     moment = require('moment');
 
 console.log('Starting up Feed Fetcher for Thriftebook...');
@@ -21,6 +22,35 @@ function parseDeal(vendor, next) {
     })
 }
 
+
+function populateImageInfo(deal, next) {
+
+    if (deal.image) {
+
+        console.log("Fetching image: " + deal.image);
+
+        request(deal.image, function (error, response, body) {
+
+            if (error || response.statusCode != 200) {
+                console.log(error);
+                next(deal);
+            }
+
+            deal.imageContent = new Binary(response.body);
+            deal.imageMimeType = response.headers['content-type'];
+            next(deal);
+
+        });
+
+    } else {
+        next(deal);
+    }
+
+
+}
+
+
+
 function storeDealInDbIfRequired(deal, db, next) {
 
     var today= moment().startOf('day').toDate();
@@ -35,12 +65,15 @@ function storeDealInDbIfRequired(deal, db, next) {
 
         if (!existingDeals.length) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
-            
-            // Insert some documents
-            dealsCollection.insert([
-                deal
-            ], function (err, insertedDeal) {
-                next(insertedDeal);
+
+            populateImageInfo(deal, function(err, dealWithImage) {
+
+                // Insert some documents
+                dealsCollection.insert([
+                    deal
+                ], function (err, insertedDeal) {
+                    next(insertedDeal);
+                });
             });
             
         } else {

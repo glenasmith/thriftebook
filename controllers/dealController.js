@@ -1,5 +1,7 @@
 
 var _ = require('lodash'),
+    ObjectId = require('mongodb').ObjectID,
+    Binary = require('mongodb').Binary,
     moment = require('moment');
 
 var dealController = function(db) {
@@ -147,14 +149,29 @@ var dealController = function(db) {
 
     };
 
-    
+    var getCoverImage = function (req, res) {
+
+        var dealsCollection = db.collection('deals');
+
+        var record = {"_id": new ObjectId(req.params.id)};
+        dealsCollection.findOne(record, function(err,result){
+            if(err)
+                res.status(500).send(err);
+            else {
+                res.status(200).type(result.imageMimeType).send(result.imageContent.binary);
+            }
+        });
+
+
+    };
 
 
     return {
         getAllDeals: getAllDeals,
         getTodaysDeals:getTodaysDeals,
         getDealsForDate:getDealsForDate,
-        getDealsForVendor:getDealsForVendor
+        getDealsForVendor:getDealsForVendor,
+        getCoverImage: getCoverImage
     }
 }
 
