@@ -25,36 +25,25 @@ var dealController = function(db) {
 
     };
 
-    function getDealsFromTheLast24Hours(recentDeals) {
 
-        return _.filter(recentDeals, function(deal) {
-
-            var created = deal.createdAt;
-            var thisTimeYesterday = moment().subtract(24, 'hours').unix();
-            return  created > thisTimeYesterday;
-
-        });
-
-
-    }
 
     var getTodaysDeals = function(req,res) {
 
         var now = moment();
 
-        var today= now.startOf('day').unix();
-        var yesterday = now.subtract(1, "day").unix();
+        var thisTimeYesterday = moment().subtract(24, 'hours').toDate();
         
         var dealsCollection = db.collection('deals');
+
+        console.log("Looking for entries with createdAt greater than " + thisTimeYesterday + " against current time of " + moment().toDate());
         
-        dealsCollection.find({ date: { $in: [yesterday, today] } }).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
             }
 
             if (recentDeals.length) {
-                // var currentDeals = getDealsFromTheLast24Hours(recentDeals);
                 res.status(200).json(recentDeals);
             } else {
                 res.status(404);
@@ -106,20 +95,20 @@ var dealController = function(db) {
                 if (day) {
                     // day-based query
                     var dayOfInterest = new Date(year, month , day);
-                    var queryDate= moment(dayOfInterest).startOf('day').unix();
+                    var queryDate= moment(dayOfInterest).startOf('day').toDate();
                     mongoQ.date = { $eq: queryDate };
                 } else {
                     // month-based query
                     var dayOfInterest = new Date(year, month);
-                    var startDate= moment(dayOfInterest).startOf('day').unix();
-                    var endDate= moment(dayOfInterest).endOf('month').unix();
+                    var startDate= moment(dayOfInterest).startOf('day').toDate();
+                    var endDate= moment(dayOfInterest).endOf('month').toDate();
                     mongoQ.date = { $gte: startDate, $lte: endDate };
                 }
             } else {
                 // year-based query
                 var dayOfInterest = new Date(year, 0);
-                var startDate= moment(dayOfInterest).startOf('day').unix();
-                var endDate= moment(dayOfInterest).endOf('year').unix();
+                var startDate= moment(dayOfInterest).startOf('day').toDate();
+                var endDate= moment(dayOfInterest).endOf('year').toDate();
                 mongoQ.date = { $gte: startDate, $lte: endDate };
             }
         }

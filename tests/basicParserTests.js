@@ -4,7 +4,6 @@ var expect = require('chai').expect,
 
 describe('Basic Vendor Parser Test', function () {
 
-
     it('Manning', function (done) {
 
         var manning = require("../parsers/manning");
@@ -24,10 +23,73 @@ describe('Basic Vendor Parser Test', function () {
                 done();
 
             });
-
-
         });
+    });
 
+    it("O'Reilly", function (done) {
 
+        var oreilly = require("../parsers/oreilly");
+
+        fs.readFile('./tests/data-samples/oreilly.xml', 'utf8', function (err, data) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+
+            oreilly.parser(data, function (deal) {
+
+                expect(deal.vendor).to.equal("O'Reilly");
+                expect(deal.image).to.equal("http://covers.oreilly.com/images/0636920042570/bkt.gif");
+                expect(deal.title).to.equal("Mastering MEAN Web Development");
+                expect(deal.text).to.equal('Get "Mastering MEAN Web Development" today using code DEAL and save 50%!   This sale ends at 2:00 AM 2015-05-22 (PDT, GMT-8:00).')
+                done();
+
+            });
+        });
     })
+
+    it("Apress", function (done) {
+
+        var apress = require("../parsers/apress");
+
+        fs.readFile('./tests/data-samples/apress.html', 'utf8', function (err, data) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+
+            apress.parser(data, function (deal) {
+
+                expect(deal.vendor).to.equal("Apress");
+                expect(deal.image).to.equal("http://www.apress.com/media/catalog/product/cache/9/small_image/125x/040ec09b1e35df139433887a97daa66f/A/9/A9781430260073-small.png");
+                expect(deal.title).to.equal("Expert PHP and MySQL");
+                expect(deal.text).to.equal('$10 Daily Deal')
+                done();
+            });
+        });
+    })
+
+
+    it("Informit", function (done) {
+
+        var informit = require("../parsers/informit");
+
+        fs.readFile('./tests/data-samples/informit.html', 'utf8', function (err, data) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+
+            informit.parser(data, function (deal) {
+
+                expect(deal.vendor).to.equal("InformIT");
+                expect(deal.image).to.equal("http://www.informit.com/ShowCover.aspx?isbn=0133599418&amp;type=f");
+                expect(deal.title).to.equal("Successful Management Guidelines (Collection)");
+                expect(deal.text).to.equal('Daily Deal')
+                done();
+            });
+        });
+    })
+
+
 })

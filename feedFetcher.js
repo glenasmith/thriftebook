@@ -23,13 +23,11 @@ function parseDeal(vendor, next) {
 
 function storeDealInDbIfRequired(deal, db, next) {
 
-    var now = moment();
-
-    var today= now.startOf('day').unix();
-    var yesterday = now.subtract(1, "day").unix();
+    var today= moment().startOf('day').toDate();
+    var yesterday = moment().subtract(1, "day").toDate();
 
     deal.date = today;
-    deal.createdAt = now.unix();
+    deal.createdAt = moment().toDate();
     
     var dealsCollection = db.collection('deals');
 
