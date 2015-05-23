@@ -54,14 +54,14 @@ function populateImageInfo(deal, next) {
 function storeDealInDbIfRequired(deal, db, next) {
 
     var today= moment().startOf('day').toDate();
-    var yesterday = moment().subtract(1, "day").toDate();
+    var aWeekAgo = moment().subtract(3, "day").toDate(); // to cater for weekly deals, weekends without updates, etc
 
     deal.date = today;
     deal.createdAt = moment().toDate();
     
     var dealsCollection = db.collection('deals');
 
-    dealsCollection.find({ vendor: deal.vendor, title: deal.title, date: { $in: [yesterday, today] } }).toArray(function(err, existingDeals) {
+    dealsCollection.find({ vendor: deal.vendor, title: deal.title, createdAt: { $gte: aWeekAgo } }).toArray(function(err, existingDeals) {
 
         if (!existingDeals.length) {
             console.log("Inserting new title from " + deal.vendor + " into the database: " + deal.title);
@@ -77,6 +77,7 @@ function storeDealInDbIfRequired(deal, db, next) {
             });
             
         } else {
+            console.log("Ignoring existing Db deal from " + deal.vendor + ": " + deal.title);
             next(deal); // don't need to insert it, but pass it on for next in chain..
         }
         
