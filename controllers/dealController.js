@@ -37,20 +37,28 @@ var dealController = function(db) {
 
         var now = moment();
 
-        var thisTimeYesterday = moment().subtract(24, 'hours').toDate();
+        var aFewDaysAgo = moment().subtract(4, 'days').toDate(); // to cater for deals that last weekends, etc
         
         var dealsCollection = db.collection('deals');
 
-        console.log("Looking for entries with createdAt greater than " + thisTimeYesterday + " against current time of " + moment().toDate());
+        console.log("Looking for entries with createdAt greater than " + aFewDaysAgo + " against current time of " + moment().toDate());
         
-        dealsCollection.find({ createdAt: { $gt: thisTimeYesterday } }, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
+        dealsCollection.find({ createdAt: { $gt: aFewDaysAgo } }, basicFieldsToReturn).sort({ createdAt: -1 }).toArray(function (err, recentDeals) {
 
             if (err) {
                 res.status(500).send(err);
             }
 
             if (recentDeals.length) {
-                res.status(200).json(recentDeals);
+                var seenVendors = []
+                var todaysDeals = _.filter(recentDeals, function(nextDeal) {
+                    if (_.indexOf(seenVendors, nextDeal.vendor) == -1) {
+                        seenVendors.push(nextDeal.vendor);
+                        return true;
+                    }
+                    return false;
+                });
+                res.status(200).json(todaysDeals);
             } else {
                 res.status(404);
             }
