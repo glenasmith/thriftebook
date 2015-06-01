@@ -46,7 +46,7 @@ describe('Basic Vendor Parser Test', function () {
 
             });
         });
-    })
+    });
 
     it("Apress", function (done) {
 
@@ -67,7 +67,7 @@ describe('Basic Vendor Parser Test', function () {
                 done();
             });
         });
-    })
+    });
 
 
     it("Informit", function (done) {
@@ -89,7 +89,28 @@ describe('Basic Vendor Parser Test', function () {
                 done();
             });
         });
-    })
+    });
+
+    it("Packt", function (done) {
+
+        var packt = require("../parsers/packt");
+
+        fs.readFile('./tests/data-samples/packt.html', 'utf8', function (err, data) {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+
+            packt.parser(data, function (deal) {
+
+                expect(deal.vendor).to.equal("Packt");
+                expect(deal.image).to.equal("http://d255esdrn735hr.cloudfront.net/sites/default/files/imagecache/dotd_main_image/9065OS_R Data Analysis Cookbook.jpg");
+                expect(deal.title).to.equal("R Data Analysis Cookbook [eBook]");
+                expect(deal.text).to.equal('Deal of the Day')
+                done();
+            });
+        });
+    });
 
 
 })

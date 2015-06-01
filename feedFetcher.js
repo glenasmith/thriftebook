@@ -89,9 +89,10 @@ function storeDealInDbIfRequired(deal, db, next) {
 var manning = require("./parsers/manning"),
     oreilly = require("./parsers/oreilly"),
     apress = require("./parsers/apress"),
-    informit = require("./parsers/informit");
+    informit = require("./parsers/informit"),
+    packt = require("./parsers/packt");
 
-var feedsToParse = [ manning, oreilly, apress, informit];
+var feedsToParse = [ manning, oreilly, apress, informit, packt];
 
 var feedsParsed = 0;
 
