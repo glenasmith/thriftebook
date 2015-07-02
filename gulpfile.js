@@ -1,10 +1,12 @@
 var gulp = require('gulp'),
     //nodemon = require('gulp-nodemon'),
-    gulpMocha = require('gulp-mocha'),
+    mocha = require('gulp-mocha'),
     env = require('gulp-env'),
     mainBowerFiles = require('main-bower-files'),
     inject = require('gulp-inject'),
+    gutil = require('gulp-util'),
     del = require('del'),
+    react = require('gulp-react'),
     zip = require('gulp-zip');
 
 
@@ -14,13 +16,25 @@ var paths = {
     tempIndex: 'temp/index.html',
 
     index: 'app/index.html',
-    appSrc: ['app/**/*', '!app/index.html'],
+    appSrc: ['app/**', '!app/index.html'],
     bowerSrc: 'bower_components/**/*'
 };
 
-gulp.task('default', ['copyAll']);
+gulp.task('default', ['react', 'copyAll']);
+
+
+
+gulp.task('react', function () {
+    return gulp.src('app/*.jsx')
+        .pipe(react())
+        .pipe(gulp.dest('app'));
+});
+
+
 
 gulp.task('copyAll', function () {
+
+
     var tempVendors = gulp.src(mainBowerFiles()).pipe(gulp.dest(paths.tempVendor));
 
     var appFiles = gulp.src(paths.appSrc).pipe(gulp.dest(paths.temp));
@@ -56,6 +70,20 @@ gulp.task('webjob', function() {
 
 gulp.task('test', function(){
     env({vars: {ENV:'Test'}});
-    gulp.src('tests/*.js', {read: false})
-        .pipe(gulpMocha({reporter: 'nyan'}))
+    gulp.src('test/*.js', {read: false})
+        .pipe(mocha({reporter: 'nyan'}))
 });
+
+gulp.task('test', function() {
+    env({vars: {ENV:'Test'}});
+    return gulp.src(['test/*.js'], {read:false})
+        .pipe(mocha({reporter: 'nyan'}))
+        .on('error', gutil.log);
+});
+
+gulp.task('watch-test', function() {
+    gulp.run('mocha');
+    gulp.watch(['./**/*.js', 'test/**/*.js'], ['mocha']);
+});
+
+//gulp.task('default', ['watch-test']);

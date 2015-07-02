@@ -8,7 +8,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var manning = require("../parsers/manning");
 
-        fs.readFile('./tests/data-samples/manning.js', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/manning.js', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -30,7 +30,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var oreilly = require("../parsers/oreilly");
 
-        fs.readFile('./tests/data-samples/oreilly.xml', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/oreilly.xml', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -52,7 +52,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var apress = require("../parsers/apress");
 
-        fs.readFile('./tests/data-samples/apress.html', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/apress.html', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -74,7 +74,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var informit = require("../parsers/informit");
 
-        fs.readFile('./tests/data-samples/informit.html', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/informit.html', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -95,7 +95,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var packt = require("../parsers/packt");
 
-        fs.readFile('./tests/data-samples/packt.html', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/packt.html', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
