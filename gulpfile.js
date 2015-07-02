@@ -16,11 +16,12 @@ var paths = {
     tempIndex: 'temp/index.html',
 
     index: 'app/index.html',
-    appSrc: ['app/**', '!app/index.html'],
+    appSrc: ['app/*.jsx'],
+    styleSrc: 'app/*.css',
     bowerSrc: 'bower_components/**/*'
 };
 
-gulp.task('default', ['react', 'copyAll']);
+gulp.task('default', ['copyAll']);
 
 
 
@@ -37,7 +38,9 @@ gulp.task('copyAll', function () {
 
     var tempVendors = gulp.src(mainBowerFiles()).pipe(gulp.dest(paths.tempVendor));
 
-    var appFiles = gulp.src(paths.appSrc).pipe(gulp.dest(paths.temp));
+    var appFiles = gulp.src(paths.appSrc).pipe(react()).pipe(gulp.dest(paths.temp));
+
+    var styleFiles = gulp.src(paths.styleSrc).pipe(gulp.dest(paths.temp));
 
     return gulp.src(paths.index)
         .pipe(gulp.dest(paths.temp))
@@ -46,6 +49,9 @@ gulp.task('copyAll', function () {
             name: 'vendorInject'
         }))
         .pipe(inject(appFiles, {
+            relative: true
+        }))
+        .pipe(inject(styleFiles, {
             relative: true
         }))
         .pipe(gulp.dest(paths.temp));
