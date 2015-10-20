@@ -2,23 +2,25 @@ module.exports = {
 
     vendor: "Manning",
 
-    url: "http://incsrc.manningpublications.com/dotd.js",
+    url: "http://www.manning.com/dotd",
 
     parser: function (body, next) {
 
+            var manningTitleRegexp=/<div class="product-placeholder-title">([^<]+).*/i;
+            var manningRegexp=/<div style="background-image: url\('([^']+)'\)"\s+class="product-thumbnail">.*<div class="brief">([^<]+).*?<div class="grabline">(.*?)<\/div>/i;
 
-            var manningRegexp = /a href='([^']+)'>([^<]+).*img src='([^']+)'><\/a>([^"]+)/;
+            var onelineBody = body.replace(/(\r\n|\n|\r)/gm,"");
 
-            var matches = body.match(manningRegexp);
-
-            var detail = matches[4].replace(/<[^>]+>/g, " ").trim(); // strip all html
+            var titleMatch = onelineBody.match(manningTitleRegexp);
+            var matches = onelineBody.match(manningRegexp);
+            var dealText = (matches[2].trim() + ". " + matches[3].trim()).replace(/<\/?[^>]+?>/g, ""); // strip html
 
             next( {
                 vendor: this.vendor,
-                link: matches[1],
-                title: matches[2],
-                image: matches[3],
-                text: detail
+                link: "http://www.manning.com/dotd",
+                title: titleMatch[1].trim(),
+                image: matches[1],
+                text: dealText
             });
 
     }
