@@ -127,7 +127,7 @@ MongoClient.connect(dbUrl, function (err, db) {
 
 
 var secondsWaitingSoFar = 0;
-var MAX_FEED_FETCH_TIMEOUT_SECONDS = process.env.feedFetchTimeoutSecs || 15;
+var MAX_FEED_FETCH_TIMEOUT_SECONDS = process.env.feedFetchTimeoutSecs || 60;
 
 function waitForFeedParsersToFinish () {
     secondsWaitingSoFar += 1;
