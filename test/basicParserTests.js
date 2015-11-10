@@ -8,7 +8,7 @@ describe('Basic Vendor Parser Test', function () {
 
         var manning = require("../parsers/manning");
 
-        fs.readFile('./test/data-samples/manning.js', 'utf8', function (err, data) {
+        fs.readFile('./test/data-samples/manning.html', 'utf8', function (err, data) {
             if (err) {
                 console.log(err);
                 throw err;
@@ -17,9 +17,9 @@ describe('Basic Vendor Parser Test', function () {
             manning.parser(data, function (deal) {
 
                 expect(deal.vendor).to.equal("Manning");
-                expect(deal.image).to.equal("http://www.manning.com/maras/maras_cover150.jpg");
-                expect(deal.title).to.equal("Secrets of the JavaScript Ninja, Second Edition");
-                expect(deal.text).to.equal("Get half off the MEAP eBook or MEAP pBook  Enter dotd052115 in the Promotional Code box when you check out.")
+                expect(deal.image).to.equal("https://images.manning.com/330/440/resize/book/5/c571a23-0d49-49af-9f2f-252244f6edd3/Learn_Go_meap.png");
+                expect(deal.title).to.equal("Learn Go");
+                expect(deal.text).to.equal("Get half off Learn Go. Use code dotd102015 at checkout before this deal expires at midnight, Eastern time.")
                 done();
 
             });
